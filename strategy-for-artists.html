@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategy For Artists</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --dark: #111111;
+    --card: #161616;
+    --border: #222222;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --white: #f0ece3;
+    --muted: #888888;
+    --red: #c44b3a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--gold);
+  }
+  .nav-cta {
+    background: var(--gold);
+    color: var(--black);
+    padding: 10px 24px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(201,168,76,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(196,75,58,0.04) 0%, transparent 60%);
+  }
+
+  .hero-line {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.6;
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 160px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--gold);
+    display: block;
+  }
+
+  .hero-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 2.5vw, 26px);
+    font-style: italic;
+    color: var(--muted);
+    max-width: 600px;
+    line-height: 1.5;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-actions {
+    display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    padding: 18px 40px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .btn-ghost {
+    color: var(--white);
+    padding: 18px 0;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-stats {
+    position: absolute; right: 40px; bottom: 80px;
+    display: flex; flex-direction: column; gap: 24px; text-align: right;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .hero-stat-label {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ─── SCROLL TICKER ─── */
+  .ticker {
+    overflow: hidden;
+    background: var(--gold);
+    padding: 12px 0;
+  }
+  .ticker-inner {
+    display: flex; gap: 0;
+    animation: ticker 18s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-inner span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: var(--black);
+    padding: 0 32px;
+  }
+  .ticker-inner span::before {
+    content: '✦';
+    margin-right: 32px;
+    opacity: 0.5;
+  }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 100px 40px; }
+
+  .section-tag {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 6vw, 80px);
+    line-height: 1;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+  }
+
+  .divider {
+    width: 40px; height: 2px;
+    background: var(--gold);
+    margin-bottom: 32px;
+  }
+
+  /* ─── PROBLEM ─── */
+  .problem {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .problem-left .section-title {
+    color: var(--white);
+  }
+  .problem-left .section-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+  .problem-body {
+    font-size: 17px;
+    line-height: 1.8;
+    color: #aaa;
+  }
+  .problem-list {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 20px;
+    margin-top: 8px;
+  }
+  .problem-list li {
+    display: flex; gap: 20px;
+    align-items: flex-start;
+    padding: 24px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .problem-list li::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--red);
+  }
+  .problem-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--border);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .problem-text strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--white);
+  }
+  .problem-text p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ─── METHOD ─── */
+  .method {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .method-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; margin-bottom: 72px;
+    align-items: end;
+  }
+  .method-intro {
+    font-size: 17px; line-height: 1.8; color: #aaa;
+  }
+  .characters {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .character {
+    padding: 32px 24px;
+    background: var(--card);
+    border-top: 3px solid transparent;
+    transition: border-color 0.3s;
+    position: relative;
+  }
+  .character:hover { border-color: var(--gold); }
+  .character:nth-child(1) { border-color: var(--gold); }
+  .character-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 60px;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .character-role {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .character-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* ─── STEPS ─── */
+  .steps-section {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+  }
+  .steps-wrapper { max-width: 1200px; margin: 0 auto; }
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 2px; margin-top: 48px;
+  }
+  .step {
+    padding: 32px 20px;
+    background: var(--card);
+    position: relative;
+    overflow: hidden;
+  }
+  .step::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+  .step:hover::after { transform: scaleX(1); }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--white);
+    line-height: 1.3;
+  }
+  .step-desc {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* ─── PROOF ─── */
+  .proof { max-width: 1200px; margin: 0 auto; }
+  .proof-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-bottom: 64px;
+  }
+  .proof-stat {
+    padding: 40px 32px;
+    background: var(--card);
+    border-top: 3px solid var(--gold);
+  }
+  .proof-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .proof-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .testimonials {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .testimonial {
+    padding: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  .testimonial-stars {
+    color: var(--gold);
+    font-size: 14px;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+  .testimonial-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #ccc;
+    margin-bottom: 20px;
+  }
+  .testimonial-author {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ─── ABOUT ─── */
+  .about-section {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+  }
+  .about-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .about-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1; margin-bottom: 24px;
+  }
+  .about-title em { font-style: normal; color: var(--gold); }
+  .about-body {
+    font-size: 16px; line-height: 1.9; color: #aaa;
+    margin-bottom: 32px;
+  }
+  .about-credentials {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .credential {
+    display: flex; gap: 12px; align-items: center;
+  }
+  .credential::before {
+    content: '✦';
+    color: var(--gold);
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+  .credential span {
+    font-size: 13px; color: var(--muted);
+  }
+  .about-image-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    aspect-ratio: 3/4;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-image-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
+  }
+  .about-image-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 2px;
+    line-height: 1;
+    position: relative; z-index: 1;
+  }
+  .about-image-tag {
+    font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    position: relative; z-index: 1;
+    margin-top: 6px;
+  }
+  .about-image-grid {
+    position: absolute; inset: 0;
+    display: grid; grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    opacity: 0.03;
+  }
+  .about-image-grid div {
+    border: 1px solid var(--gold);
+  }
+
+  /* ─── FORMAT ─── */
+  .format { max-width: 1200px; margin: 0 auto; }
+  .format-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2px; margin-top: 48px;
+  }
+  .format-card {
+    padding: 48px 40px;
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  .format-card.featured {
+    background: #1a1600;
+    border-color: var(--gold);
+  }
+  .format-icon {
+    font-size: 32px; margin-bottom: 20px;
+  }
+  .format-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 2px;
+    margin-bottom: 12px;
+    color: var(--gold);
+  }
+  .format-desc {
+    font-size: 14px; line-height: 1.8; color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .format-list {
+    list-style: none; display: flex; flex-direction: column; gap: 10px;
+  }
+  .format-list li {
+    font-size: 13px; color: #ccc;
+    padding-left: 20px; position: relative;
+  }
+  .format-list li::before {
+    content: '—';
+    position: absolute; left: 0;
+    color: var(--gold);
+  }
+
+  /* ─── PRICING ─── */
+  .pricing-section {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .pricing-header {
+    max-width: 1200px; margin: 0 auto 56px;
+  }
+  .pricing-header .section-title em {
+    font-style: normal; color: var(--gold);
+  }
+  .pricing-subtitle {
+    font-size: 16px; line-height: 1.8; color: #aaa;
+    max-width: 560px; margin-top: 16px;
+  }
+  .pricing-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+  .plan {
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .plan.featured {
+    background: #111000;
+    border-color: var(--gold);
+  }
+  .plan-badge {
+    position: absolute; top: 0; right: 0;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    font-weight: 500;
+  }
+  .plan-header {
+    padding: 32px 28px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .plan-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 2px;
+    color: var(--white); margin-bottom: 4px;
+  }
+  .plan.featured .plan-name { color: var(--gold); }
+  .plan-tagline {
+    font-size: 11px; letter-spacing: 1px;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .plan-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px; color: var(--white); line-height: 1;
+  }
+  .plan.featured .plan-price { color: var(--gold); }
+  .plan-period {
+    font-size: 11px; color: var(--muted);
+    margin-top: 4px; letter-spacing: 1px;
+  }
+  .plan-body {
+    padding: 28px;
+    flex: 1;
+  }
+  .plan-items {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 11px;
+  }
+  .plan-items li {
+    font-size: 12px; color: #bbb;
+    padding-left: 18px; position: relative;
+    line-height: 1.5;
+  }
+  .plan-items li::before {
+    content: '✓';
+    position: absolute; left: 0;
+    color: var(--gold); font-size: 11px;
+  }
+  .plan-footer {
+    padding: 0 28px 28px;
+  }
+  .btn-plan {
+    display: block;
+    padding: 14px 20px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s;
+    border: 1px solid var(--border);
+    color: var(--white);
+  }
+  .btn-plan:hover { border-color: var(--gold); color: var(--gold); }
+  .plan.featured .btn-plan {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+  }
+  .plan.featured .btn-plan:hover { background: var(--gold-light); }
+
+  .btn-full {
+    display: block;
+    background: var(--gold);
+    color: var(--black);
+    padding: 22px 40px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .btn-full:hover { background: var(--gold-light); }
+
+  .include-item {
+    font-size: 13px; color: #ccc;
+    padding-left: 20px; position: relative;
+  }
+  .include-item::before {
+    content: '✓';
+    position: absolute; left: 0;
+    color: var(--gold); font-weight: 700;
+  }
+
+  /* ─── FAQ ─── */
+  .faq { max-width: 800px; margin: 0 auto; }
+  .faq-list { margin-top: 48px; }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 0;
+  }
+  .faq-q {
+    font-size: 16px; font-weight: 500;
+    margin-bottom: 12px; color: var(--white);
+  }
+  .faq-a {
+    font-size: 14px; line-height: 1.8; color: var(--muted);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 60px 40px 40px;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 4px;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .footer-sub {
+    font-size: 12px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 40px;
+  }
+  .footer-bottom {
+    font-size: 11px; color: #444;
+    margin-top: 40px; letter-spacing: 1px;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    section { padding: 64px 20px; }
+    .hero { padding: 100px 20px 64px; }
+    .hero-stats { display: none; }
+    .problem-grid, .method-header, .about-inner { grid-template-columns: 1fr; gap: 40px; }
+    .characters, .steps-grid, .proof-grid, .testimonials, .format-grid, .pricing-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Strategy For Artists</div>
+  <a href="#pricing" class="nav-cta">Quero entrar</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-line"></div>
+
+  <div class="hero-tag">Por Mezomo · DJ, Produtor & Estrategista</div>
+  
+  <h1 class="hero-title">
+    Artista
+    <em>Acima da</em>
+    Média.
+  </h1>
+
+  <p class="hero-subtitle">
+    O curso que ensina artistas e criativos a pensar, planejar e agir estrategicamente — sem abandonar a arte.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#pricing" class="btn-primary">Garantir minha vaga</a>
+    <a href="#method" class="btn-ghost">Ver a metodologia ↓</a>
+  </div>
+
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-num">80+</div>
+      <div class="hero-stat-label">Alunos formados</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">5.0</div>
+      <div class="hero-stat-label">Nota na Hotmart</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">6</div>
+      <div class="hero-stat-label">Módulos</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>Branding</span><span>Estratégia de Carreira</span><span>Análise de Mercado</span>
+    <span>Planejamento</span><span>Criatividade</span><span>Empreendedorismo</span>
+    <span>Posicionamento</span><span>Tendências</span><span>Identidade Artística</span>
+    <span>Branding</span><span>Estratégia de Carreira</span><span>Análise de Mercado</span>
+    <span>Planejamento</span><span>Criatividade</span><span>Empreendedorismo</span>
+    <span>Posicionamento</span><span>Tendências</span><span>Identidade Artística</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="problem-grid">
+    <div class="problem-left">
+      <div class="section-tag">O diagnóstico</div>
+      <h2 class="section-title">Talento<br>não é<br><em>suficiente.</em></h2>
+      <div class="divider"></div>
+      <p class="problem-body">
+        O mercado artístico está mais competitivo, mais saturado e mais profissional do que nunca. Aqueles que dominam só a habilidade artística ficam para trás.
+      </p>
+    </div>
+    <ul class="problem-list">
+      <li>
+        <div class="problem-num">01</div>
+        <div class="problem-text">
+          <strong>Sem direção estratégica</strong>
+          <p>Você produz, cria, se dedica — mas não sabe exatamente para onde está indo. Falta um mapa claro da sua carreira.</p>
+        </div>
+      </li>
+      <li>
+        <div class="problem-num">02</div>
+        <div class="problem-text">
+          <strong>Sem posicionamento definido</strong>
+          <p>Sua identidade artística não está clara nem para você, o que dificulta se comunicar e se destacar no mercado.</p>
+        </div>
+      </li>
+      <li>
+        <div class="problem-num">03</div>
+        <div class="problem-text">
+          <strong>Sem manager, sem estrutura</strong>
+          <p>A visão de negócio que transforma talento em carreira sustentável está faltando — e você precisa ser esse manager por enquanto.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section id="method">
+  <div class="method">
+    <div class="method-header">
+      <div>
+        <div class="section-tag">A metodologia</div>
+        <h2 class="section-title">Os 3<br>Personagens</h2>
+        <div class="divider"></div>
+        <p class="method-intro">
+          O artista acima da média não é só aquele que domina a arte. É quem consegue interpretar três papéis essenciais na sua carreira — e saber quando cada um precisa entrar em cena.
+        </p>
+      </div>
+      <div><!-- spacer --></div>
+    </div>
+
+    <div class="characters">
+      <div class="character">
+        <div class="character-num">01</div>
+        <div class="character-role">O Artista</div>
+        <p class="character-desc">O protagonista. Quem cria, expressa, transmite. Desenvolver esse personagem é o ponto de partida — e deve sempre estar em primeiro lugar.</p>
+      </div>
+      <div class="character">
+        <div class="character-num">02</div>
+        <div class="character-role">O Manager</div>
+        <p class="character-desc">O estrategista. Quem transforma talento em carreira, traça o mapa, toma decisões baseadas em análise — e maximiza os resultados.</p>
+      </div>
+      <div class="character">
+        <div class="character-num">03</div>
+        <div class="character-role">O Empreendedor</div>
+        <p class="character-desc">O construtor. Quem cria estruturas sustentáveis, desenvolve alternativas de renda e garante que a carreira artística continue crescendo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="steps-section">
+  <div class="steps-wrapper">
+    <div class="section-tag">O ciclo</div>
+    <h2 class="section-title">5 Passos.<br>Eternamente.</h2>
+    <div class="divider"></div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Colocar a Arte Acima de Tudo</div>
+        <p class="step-desc">Desenvolver habilidades artísticas com obsessão. Cercar-se de criatividade, referências e imersão constante no universo da arte.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Viver os 3 Personagens</div>
+        <p class="step-desc">Alternar conscientemente entre Artista, Manager e Empreendedor — sabendo o papel de cada um no momento certo.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Fazer o Diagnóstico</div>
+        <p class="step-desc">Analisar profundamente identidade artística, mercado, tendências e o mundo ao redor. O diagnóstico correto leva às decisões certeiras.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Traçar o Mapa</div>
+        <p class="step-desc">Definir o objetivo final, os recursos disponíveis e o melhor caminho. O mapa não é o terreno — é ponto de partida para a execução.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-title">Girar o Ciclo Eternamente</div>
+        <p class="step-desc">Quem ganha é quem faz sempre. O profissional faz todos os dias o que o amador faz de vez em quando.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section>
+  <div class="proof">
+    <div class="section-tag">Resultados</div>
+    <h2 class="section-title">O que os<br>alunos dizem</h2>
+    <div class="divider"></div>
+
+    <div class="proof-grid">
+      <div class="proof-stat">
+        <div class="proof-num">80+</div>
+        <div class="proof-label">Alunos em 5 turmas</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num">5.0</div>
+        <div class="proof-label">Nota média na Hotmart</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num">100%</div>
+        <div class="proof-label">Aplicável em qualquer carreira criativa</div>
+      </div>
+    </div>
+
+    <div class="testimonials">
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Finalmente entendi como transformar minha paixão em algo profissional. A forma como o Mezomo conecta estratégia e arte é única — prático e profundo ao mesmo tempo."</p>
+        <div class="testimonial-author">— DJ & Produtor, Porto Alegre</div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Eu não sabia que existia um curso assim. Aprendi a me enxergar como marca, entender o mercado e criar um plano real para a minha carreira."</p>
+        <div class="testimonial-author">— Produtor Musical, São Paulo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section">
+  <div class="about-inner">
+    <div>
+      <div class="section-tag">Quem ensina</div>
+      <h2 class="about-title">Bruno<br><em>Mezomo</em></h2>
+      <div class="divider"></div>
+      <p class="about-body">
+        DJ e produtor gaúcho, com formação em Administração e MBA em Branding, Mezomo aplicou esses conhecimentos para construir sua carreira artística e transformar a Sunset Sessions em uma das maiores festas do Sul do Brasil.
+      </p>
+      <p class="about-body" style="margin-top: -16px;">
+        A Strategy For Artists nasceu da fusão rara entre teoria acadêmica e prova prática — não é o que ele leu, é o que ele viveu.
+      </p>
+      <div class="about-credentials">
+        <div class="credential"><span>Formado em Administração de Empresas</span></div>
+        <div class="credential"><span>MBA em Branding</span></div>
+        <div class="credential"><span>Consultor de Planejamento Estratégico</span></div>
+        <div class="credential"><span>DJ & Produtor — Mezomo</span></div>
+        <div class="credential"><span>Criador e fundador da Sunset Sessions</span></div>
+      </div>
+    </div>
+    <div class="about-image-box">
+      <div class="about-image-grid">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+      </div>
+      <div class="about-image-overlay"></div>
+      <div class="about-image-name">Mezomo</div>
+      <div class="about-image-tag">DJ · Produtor · Estrategista</div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMAT -->
+<section id="format">
+  <div class="format">
+    <div class="section-tag">O formato</div>
+    <h2 class="section-title">Curso + Mentoria</h2>
+    <div class="divider"></div>
+    <div class="format-grid">
+      <div class="format-card">
+        <div class="format-icon">🎬</div>
+        <div class="format-title">Curso Gravado</div>
+        <p class="format-desc">6 módulos gravados com todo o conteúdo da metodologia Strategy For Artists. Assista no seu ritmo, quantas vezes quiser.</p>
+        <ul class="format-list">
+          <li>Módulo 1 — Identidade Artística & Branding</li>
+          <li>Módulo 2 — Análise de Mercado & Tendências</li>
+          <li>Módulo 3 — Os 3 Personagens</li>
+          <li>Módulo 4 — Diagnóstico Estratégico</li>
+          <li>Módulo 5 — Planejamento & Execução</li>
+          <li>Módulo 6 — Criatividade & Inovação</li>
+        </ul>
+      </div>
+      <div class="format-card featured">
+        <div class="format-icon">🎯</div>
+        <div class="format-title">Mentoria ao Vivo</div>
+        <p class="format-desc">Sessões ao vivo com Mezomo para aplicar a metodologia na sua carreira com direção personalizada.</p>
+        <ul class="format-list">
+          <li>Encontros ao vivo em turmas fechadas</li>
+          <li>Aplicação prática com seu contexto real</li>
+          <li>Perguntas diretas para Mezomo</li>
+          <li>Grupo exclusivo de alunos</li>
+          <li>Feedback sobre seu planejamento</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-header">
+    <div class="section-tag">Investimento</div>
+    <h2 class="section-title">Escolha seu<br><em>nível de entrada.</em></h2>
+    <p class="pricing-subtitle">Cada modalidade foi criada para um momento diferente da sua jornada. Comece por onde faz sentido para você agora.</p>
+  </div>
+
+  <div class="pricing-grid">
+
+    <!-- STRATEGY START -->
+    <div class="plan">
+      <div class="plan-header">
+        <div class="plan-name">Strategy Start</div>
+        <div class="plan-tagline">Para quem está começando</div>
+        <div class="plan-price">R$390</div>
+        <div class="plan-period">pagamento único</div>
+      </div>
+      <div class="plan-body">
+        <ul class="plan-items">
+          <li>1 diagnóstico estratégico da sua carreira</li>
+          <li>1 mentoria individual de carreira com Mezomo</li>
+          <li>E-kit de ferramentas Strategy For Artists</li>
+        </ul>
+      </div>
+      <div class="plan-footer">
+        <a href="#" class="btn-plan">Começar aqui →</a>
+      </div>
+    </div>
+
+    <!-- CURSO SFA -->
+    <div class="plan featured">
+      <div class="plan-badge">Mais popular</div>
+      <div class="plan-header">
+        <div class="plan-name">Curso Strategy For Artists</div>
+        <div class="plan-tagline">Estratégia completa de carreira</div>
+        <div class="plan-price">R$1.200</div>
+        <div class="plan-period">ou 12× no cartão</div>
+      </div>
+      <div class="plan-body">
+        <ul class="plan-items">
+          <li>Curso gravado completo — 6 módulos</li>
+          <li>6 aulas ao vivo em turma com Mezomo</li>
+          <li>2 mentorias individuais de carreira</li>
+          <li>Acesso permanente ao conteúdo</li>
+        </ul>
+      </div>
+      <div class="plan-footer">
+        <a href="#" class="btn-plan">Garantir minha vaga →</a>
+      </div>
+    </div>
+
+    <!-- MENTORIA 1x1 -->
+    <div class="plan">
+      <div class="plan-header">
+        <div class="plan-name">Mentoria 1×1</div>
+        <div class="plan-tagline">Imersão de 6 meses</div>
+        <div class="plan-price">R$3.500</div>
+        <div class="plan-period">6 meses de acompanhamento</div>
+      </div>
+      <div class="plan-body">
+        <ul class="plan-items">
+          <li>8 mentorias individuais de produção musical</li>
+          <li>3 mentorias individuais de carreira</li>
+          <li>Curso gravado completo</li>
+          <li>6 aulas ao vivo em turma</li>
+          <li>2 tracks finalizadas (mix/master incluso)</li>
+        </ul>
+      </div>
+      <div class="plan-footer">
+        <a href="#" class="btn-plan">Quero a imersão →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ADD-ON -->
+  <div style="max-width:1200px; margin: 2px auto 0;">
+    <div style="background:var(--card); border:1px solid var(--border); border-top: 2px solid rgba(201,168,76,0.3); padding:24px 32px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px;">
+      <div style="display:flex; align-items:center; gap:20px;">
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:10px; letter-spacing:3px; color:var(--gold); text-transform:uppercase; border:1px solid var(--gold); padding:4px 10px; white-space:nowrap;">+ Add-on</div>
+        <div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:2px; color:var(--white);">MZM Studio — Aulas de Produção Musical</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:3px;">2 aulas individuais de produção · 1 mix/master inclusa · pode ser adicionado a qualquer plano</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:28px; flex-shrink:0;">
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:32px; color:var(--white);">R$480</div>
+        <a href="#" style="display:inline-block; padding:12px 24px; border:1px solid var(--border); font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--white); text-decoration:none; transition:all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--white)'">Adicionar →</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="faq">
+    <div class="section-tag">Perguntas</div>
+    <h2 class="section-title">Dúvidas<br>frequentes</h2>
+    <div class="divider"></div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <p class="faq-q">O curso é só para DJs e produtores?</p>
+        <p class="faq-a">Não. A metodologia é para qualquer artista ou criativo que queira encarar a carreira de forma estratégica — músicos, designers, fotógrafos, produtores de eventos. Se você cria algo e quer viver disso, o Strategy For Artists é para você.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Preciso de experiência com negócios ou administração?</p>
+        <p class="faq-a">Nenhuma. O curso foi desenvolvido para artistas, não para administradores. Todo o conteúdo é traduzido para a realidade criativa — você vai entender tudo e conseguir aplicar.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Como funciona a mentoria ao vivo?</p>
+        <p class="faq-a">As turmas têm data de início e encontros programados ao vivo. Você terá acesso às gravações caso não consiga participar em alguma sessão ao vivo.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Por quanto tempo tenho acesso ao curso gravado?</p>
+        <p class="faq-a">Acesso permanente. O conteúdo foi criado para ser revisitado em diferentes fases da sua carreira — e você vai querer voltar nele.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Quando abre a próxima turma?</p>
+        <p class="faq-a">As vagas são limitadas para garantir qualidade na mentoria. Inscreva-se na lista de espera para ser avisado em primeira mão quando a próxima turma abrir.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Strategy For Artists</div>
+  <div class="footer-sub">Por Mezomo · Transformando artistas em profissionais acima da média</div>
+  <div class="footer-bottom">© 2025 Strategy For Artists. Todos os direitos reservados.</div>
+</footer>
+
+</body>
+</html>
